@@ -40,7 +40,7 @@ int? getNumOrExit(string text)
 
 char? getOperFromStr(string? strOper)
 {
-    if (strOper != null && (strOper[0] == '+' || strOper[0] == '+' || strOper[0] == '*' || strOper[0] == '/'))
+    if (strOper != null && (strOper[0] == '+' || strOper[0] == '-' || strOper[0] == '*' || strOper[0] == '/'))
         return strOper[0];
     return null;
 }
