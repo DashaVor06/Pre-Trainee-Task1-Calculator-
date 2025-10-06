@@ -3,56 +3,40 @@
     public class CalculatorLogic
     {
         private List<char> _operations = new List<char>() {'+', '-', '*', '/'};
-        public int GetNumberOrExit(string text, bool fSearchExit, out bool fEnteredExit)
+
+        public bool TryGetNumber(string? strNum, out int num)
         {
-            int num = 0, res;
-            fEnteredExit = false;
-            do
+            num = 0;
+            if (int.TryParse(strNum, out int res))
             {
-                Console.WriteLine(text);
-                string? strNum = Console.ReadLine();
-
-                if (fSearchExit && strNum == "exit")
-                {
-                    fEnteredExit = true;
-                    break;
-                }
-
-                if (int.TryParse(strNum, out res))
-                {
-                    num = res;
-                    break;
-                }
-
-            } while (true);
-
-            return num;
+                num = res;
+                return true;
+            }
+            return false;
         }
 
-        char? GetOperationFromString(string? strOper)
+        private bool GetOperationFromString(string? strOper, out char operation)
         {
-            if (strOper != null && strOper != "" && _operations.Contains(strOper[0]))
-                return strOper[0];
-            return null;
-        }
-
-        public char GetOperation(string text)
-        {
-            char? operation;
-            do
+            operation = '\0';
+            if (!string.IsNullOrEmpty(strOper) && _operations.Contains(strOper[0]))
             {
-                Console.WriteLine(text);
-                string? strOperation = Console.ReadLine();
-                operation = GetOperationFromString(strOperation);
-            } while (operation == null);
-
-            return (char)operation;
+                operation = strOper[0];
+                return true;
+            }    
+            return false;
         }
 
-        public int Calculate(int num1, char oper, int num2, out bool fDevideByZero)
+        public bool GetOperation(string? strOperation, out char operation)
         {
-            int result = 0;
-            fDevideByZero = false;
+            operation = '\0';  
+            if (GetOperationFromString(strOperation, out operation))
+                return true;
+            return false;
+        }
+
+        public bool Calculate(int num1, char oper, int num2, out int result)
+        {
+            result = 0;
             switch (oper)
             {
                 case '+':
@@ -66,12 +50,12 @@
                     break;
                 case '/':
                     if (num2 == 0)
-                        fDevideByZero = true;
+                        return false;
                     else
                         result = num1 / num2;
                     break;
             }
-            return result;
+            return true;
         }
     }
 }
